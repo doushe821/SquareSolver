@@ -105,7 +105,6 @@ void get_input(char k, struct v_c * user_input)
             break;
         else
         {
-            printf("%d", check);
             while((miss_input = getchar()) != '\n')
                 printf("%c", miss_input);
             printf(" is not a number, try again.\n");
