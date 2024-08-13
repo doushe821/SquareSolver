@@ -3,29 +3,34 @@
 #include <math.h>
 #include <stdbool.h>
 
+const int inf_roots = -1;
+const int a = 0;
+const int b = 1;
+const int c = 2;
+
 struct user_input {
     double value;
     bool eof_flag;
 };
+
 struct solve_output{
     double x1;
     double x2;
     int roots_num;
     bool is_linear;
-    bool is_inequal;
-    bool inf_roots;
 };
 
 struct solve_output solve_quad (double a_s, double b_s, double c_s);
+
 struct user_input get_input (char k);
 
 int main (void)
 {
-    double a = 0;
-    double b = 0;
-    double c = 0;
+    int i = 0;
+    char coefficients_names[3] = {'a', 'b', 'c'};
+    double coefficients_values[3] = {0, 0, 0};
     struct user_input input_check = {0, 0};
-    struct solve_output output = {0, 0, 0, 0, 0};
+    struct solve_output output = {0, 0, 0, 0};
     char ch = 0;
 
     puts("This application solves quadratic equations.");
@@ -42,34 +47,19 @@ int main (void)
         {
             printf("Enter coefficients: ax^2 + bx + c = 0\n"
             "Press \"Ctrl+Z\" to return to menu.\n");
-            input_check = get_input('a');
-            if (input_check.eof_flag)
+            for (i = 0; i < 3; i++)
             {
-                printf("Returning to menu.\n");
-                puts("Type \"s\" to start solving equations, type \"q\" to exit program.");
-                continue;
+                input_check = get_input(coefficients_names[i]);
+                if (input_check.eof_flag)
+                {
+                    printf("Returning to menu.\n");
+                    puts("Type \"s\" to start solving equations, type \"q\" to exit program.");
+                    continue;
+                }
+                else
+                coefficients_values[i] = input_check.value;
             }
-            else
-            a = input_check.value;
-            input_check = get_input('b');
-            if (input_check.eof_flag)
-            {
-                printf("Returning to menu.\n");
-                puts("Type \"s\" to start solving equations, type \"q\" to exit program.");
-                continue;
-            }
-            else
-                b = input_check.value;
-            input_check = get_input('c');
-            if (input_check.eof_flag)
-            {
-                printf("Returning to menu.\n");
-                puts("Type \"s\" to start solving equations, type \"q\" to exit program.");
-                continue;
-            }
-            else
-                c = input_check.value;
-            output = solve_quad(a, b, c);
+            output = solve_quad(coefficients_values[a], coefficients_values[b], coefficients_values[c]);
             if (output.roots_num == 2)
                 printf("Equation has two roots:\n"
                 "x = %lf \t x = %lf\n", output.x1, output.x2);
@@ -80,14 +70,11 @@ int main (void)
                 else
                     printf("Equation has single root: x = %lf\n", output.x1);
             }
+            else if (output.roots_num == inf_roots)
+                printf("Equation has infinite amount of roots.\n");
             else if (!output.roots_num)
             {
-                if (output.is_inequal)
-                    printf("Equation has no roots.\n");
-                if (output.inf_roots)
-                    printf("Equation has infinite amount of roots.\n");
-                else
-                    printf("Equation has no real roots.\n");
+                printf("Equation has no roots.\n");
             }
 
             puts("Type \"s\" to continue solving equations, type \"q\" to exit program.");
@@ -109,7 +96,7 @@ int main (void)
 
 struct solve_output solve_quad (double a_s, double b_s, double c_s)
 {
-    struct solve_output solve_quad_out = {0, 0, 0, 0, 0};
+    struct solve_output solve_quad_out = {0, 0, 0, 0};
     double d = b_s*b_s - 4*a_s*c_s;
 
     if (a_s == 0 && b_s != 0)
@@ -119,9 +106,9 @@ struct solve_output solve_quad (double a_s, double b_s, double c_s)
         solve_quad_out.is_linear = 1;
     }
     else if (a_s == 0 && b_s == 0 && c_s != 0)
-        solve_quad_out.is_inequal = 1;
+        solve_quad_out.roots_num = 0;
     else if (a_s == 0 && b_s == 0 && c_s == 0)
-        solve_quad_out.inf_roots = 1;
+        solve_quad_out.roots_num = inf_roots;
     else if (d < 0)
         solve_quad_out.roots_num = 0;
     else if (d == 0)
