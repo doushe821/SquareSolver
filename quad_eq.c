@@ -24,9 +24,9 @@ struct user_input get_input (char k);
 int main (void)
 {
     char coefficients_names[3] = {'a', 'b', 'c'};
-    double coefficients_values[3] = {0};
-    struct user_input input_check = {0};
-    struct solve_output output = {0};
+    double coefficients_values[3] = {};
+    struct user_input input_check = {};
+    struct solve_output output = {};
 
     puts("This application solves quadratic equations.");
     puts("Type \"s\" to start solving equations, type \"q\" to exit program.");
@@ -92,7 +92,7 @@ int main (void)
 
 struct solve_output solve_quad (double a_s, double b_s, double c_s)
 {
-    struct solve_output solve_quad_out = {0};
+    struct solve_output solve_quad_out = {};
     double d = b_s*b_s - 4*a_s*c_s;
 
     if (a_s == 0 && b_s != 0)
