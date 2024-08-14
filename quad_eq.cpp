@@ -5,7 +5,7 @@
 #include <limits.h>
 
 const double EPS = 1E-12;
-const int inf_roots = -1;
+const int INF_ROOTS = -1;
 
 struct user_input {
     double value;
@@ -69,7 +69,7 @@ int main (void)
                 else
                     printf("Equation has single root: x = %lf\n", output.x1);
             }
-            else if (output.roots_num == inf_roots)
+            else if (output.roots_num == INF_ROOTS)
                 printf("Equation has infinite amount of roots.\n");
             else if (!output.roots_num)
             {
@@ -107,7 +107,7 @@ struct solve_output solve_quad (double a_s, double b_s, double c_s)
     else if (!doublecmp(a_s, 0) && !doublecmp(b_s, 0) && doublecmp(c_s, 0))
         solve_quad_out.roots_num = 0;
     else if (!doublecmp(a_s, 0) && !doublecmp(b_s, 0) && !doublecmp(c_s, 0))
-        solve_quad_out.roots_num = inf_roots;
+        solve_quad_out.roots_num = INF_ROOTS;
     else if (doublecmp(d, 0) == -1)
         solve_quad_out.roots_num = 0;
     else if (!doublecmp(d, 0))
@@ -152,10 +152,11 @@ struct user_input get_input(char k)
 
 int doublecmp(double a, double b)
 {
-    if (fabs(a-b) <= EPS)
+    double difference = a - b;
+    if (fabs(difference) <= EPS)
         return 0;
-    else if (a-b >= EPS)
+    else if (difference >= EPS)
         return 1;
-    else if (a-b <= -EPS)
+    else if (difference <= -EPS)
         return -1;
 }
