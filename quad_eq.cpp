@@ -30,7 +30,7 @@ int main (void)
 
     puts("This application solves quadratic equations.");
     puts("Type \"s\" to start solving equations, type \"q\" to exit program.");
-    char ch = 0;
+    int ch = 0;
     while ((ch = getchar()) != EOF)
     {
         if (ch == '\n')
@@ -49,8 +49,7 @@ int main (void)
                 if (input_check.eof_flag)
                 {
                     printf("Returning to menu.\n");
-                    puts("Type \"s\" to start solving equations, type \"q\" to exit program.");
-                    continue;
+                    break;
                 }
                 else
                 coefficients_values[i] = input_check.value;
@@ -124,8 +123,7 @@ struct solve_output solve_quad (double a_s, double b_s, double c_s)
 
 struct user_input get_input(char k)
 {
-    struct user_input input = {0, 0};
-
+    struct user_input input = {};
     while (1)
     {
         printf("%c: ", k);
@@ -139,7 +137,7 @@ struct user_input get_input(char k)
         }
         else
         {
-            char miss_input = 0;
+            int miss_input = 0;
             while ((miss_input = getchar()) != '\n')
                 printf("%c", miss_input);
             printf(" is not a number, try again.\n");
