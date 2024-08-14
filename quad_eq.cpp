@@ -23,6 +23,8 @@ struct solve_output solve_quad (double a_s, double b_s, double c_s);
 
 struct user_input get_input (char k);
 
+int doublecmp(double a, double b);
+
 int main (void)
 {
     char coefficients_names[3] = {'a', 'b', 'c'};
@@ -96,28 +98,28 @@ struct solve_output solve_quad (double a_s, double b_s, double c_s)
     struct solve_output solve_quad_out = {};
     double d = b_s*b_s - 4*a_s*c_s;
 
-    if (fabs(a_s) <= EPS && fabs(b_s) >= EPS)
+    if (!doublecmp(a_s, 0) && doublecmp(b_s, 0))
     {
         solve_quad_out.x1 = -c_s/b_s;
         solve_quad_out.roots_num = 1;
         solve_quad_out.is_linear = 1;
     }
-    else if (fabs(a_s) <= EPS && fabs(b_s) <= EPS && fabs(c_s) >= EPS)
+    else if (!doublecmp(a_s, 0) && !doublecmp(b_s, 0) && doublecmp(c_s, 0))
         solve_quad_out.roots_num = 0;
-    else if (fabs(a_s) <= EPS && fabs(b_s) <= EPS && fabs(c_s) <= EPS)
+    else if (!doublecmp(a_s, 0) && !doublecmp(b_s, 0) && !doublecmp(c_s, 0))
         solve_quad_out.roots_num = inf_roots;
-    else if (d < -EPS)
+    else if (doublecmp(d, 0) == -1)
         solve_quad_out.roots_num = 0;
-    else if (fabs(d) <= EPS)
+    else if (!doublecmp(d, 0))
     {
         solve_quad_out.x1 = -b_s/(2*a_s);
         solve_quad_out.roots_num = 1;
     }
     else
     {
-        d = sqrt(d);
-        solve_quad_out.x1 = (-b_s + d)/(2*a_s);
-        solve_quad_out.x2 = (-b_s - d)/(2*a_s);
+        double d_sqrt = sqrt(d);
+        solve_quad_out.x1 = (-b_s + d_sqrt)/(2*a_s);
+        solve_quad_out.x2 = (-b_s - d_sqrt)/(2*a_s);
         solve_quad_out.roots_num = 2;
     }
     return solve_quad_out;
@@ -146,4 +148,14 @@ struct user_input get_input(char k)
         }
     }
     return input;
+}
+
+int doublecmp(double a, double b)
+{
+    if (fabs(a-b) <= EPS)
+        return 0;
+    else if (a-b >= EPS)
+        return 1;
+    else if (a-b <= -EPS)
+        return -1;
 }
