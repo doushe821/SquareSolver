@@ -3,8 +3,9 @@
 #include <math.h>
 #include <stdbool.h>
 #include <limits.h>
-#define MENU_INPUT "Type \"s\" to start solving equations, type \"q\" to exit program.\n"
 
+const char MENU_INPUT[]= "Type \"s\" to start solving equations, type \"q\" to exit program.\n";
+const char INVALID_IN[]= "Invalid input\n";
 const double EPS = 1E-12;
 const int INF_ROOTS = -1;
 
@@ -15,9 +16,16 @@ struct solve_output{
     bool is_linear;
 };
 
+struct check_input{
+double value;
+bool eof_flag;
+};
+
 struct solve_output solve_quad (double a_s, double b_s, double c_s);
 
-bool get_input (double * cfs);
+bool get_abc (double * cfs);
+
+struct check_input get_input_double (void);
 
 int doublecmp(double a, double b, double acc);
 
@@ -34,14 +42,13 @@ int main (void)
     {
         if (ch == '\n')
         {
-            puts("Invalid input.");
-            printf("%s", MENU_INPUT);
+            printf("%s%s", INVALID_IN, MENU_INPUT);
             continue;
         }
         if (ch == 's' && getc(stdin) == '\n')
         {
             printf("Enter coefficients: ax^2 + bx + c = 0\n");
-            bool eof_flag = get_input(coefficients_values);
+            bool eof_flag = get_abc(coefficients_values);
             if (eof_flag)
             {
                 printf("%s", MENU_INPUT);
@@ -51,19 +58,14 @@ int main (void)
             answers_output(output);
             printf("%s", MENU_INPUT);
         }
-        else if (ch == EOF)
-        {
-
-            puts("Invalid input.");
-            printf("%s", MENU_INPUT);
-                continue;
-        }
         else
         {
-            puts("Invalid input.");
-            printf("%s", MENU_INPUT);
-            while (getchar() != '\n')
+            printf("%s%s", INVALID_IN, MENU_INPUT);
+            if (ch != EOF)
+            {
+                while (getchar() != '\n')
                 continue;
+            }
         }
     }
     printf("Bye.");
@@ -102,31 +104,43 @@ struct solve_output solve_quad (double a_s, double b_s, double c_s)
     return solve_quad_out;
 }
 
-bool get_input(double * cfs)
+bool get_abc(double * cfs)
 {
     char coefficients_names[3] = {'a', 'b', 'c'};
+    struct check_input processed_input = {};
     for (int i = 0; i < 3; i++)
     {
-        while (1)
-        {
-            printf("%c: ", coefficients_names[i]);
-            int check = 0;
-            if ((check = scanf("%lf", &cfs[i])) == 1 && getchar() == '\n')
-                break;
-            else if (check == -1)
-            {
-                return 1;
-            }
-            else
-            {
-                int miss_input = 0;
-                while ((miss_input = getchar()) != '\n')
-                    printf("%c", miss_input);
-                printf(" is not a number, try again.\n");
-            }
-        }
+        printf("%c: ", coefficients_names[i]);
+        processed_input = get_input_double();
+        if (processed_input.eof_flag == 1)
+            return 1;
+        cfs[i] = processed_input.value;
     }
     return 0;
+}
+
+struct check_input get_input_double(void)
+{
+    struct check_input user_input = {};
+    while (1)
+    {
+        int check = 0;
+        if ((check = scanf("%lf", &user_input.value)) == 1 && getchar() == '\n')
+            break;
+        else if (check == -1)
+        {
+            user_input.eof_flag = 1;
+            return user_input;
+        }
+        else
+        {
+            int miss_input = 0;
+            while ((miss_input = getchar()) != '\n')
+                printf("%c", miss_input);
+            printf(" is not a number, try again.\n");
+        }
+        return user_input;
+    }
 }
 
 int doublecmp(double a, double b, double acc)
@@ -136,8 +150,7 @@ int doublecmp(double a, double b, double acc)
         return 0;
     else if (delta > 0)
         return 1;
-    else
-        return -1;
+    return (delta>0)-(delta<0);
 }
 
 void answers_output(const struct solve_output console_out)
