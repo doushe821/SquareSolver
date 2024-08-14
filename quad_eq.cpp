@@ -2,7 +2,9 @@
 #include <stdlib.h>
 #include <math.h>
 #include <stdbool.h>
+#include <limits.h>
 
+const double EPS = 1E-12;
 const int inf_roots = -1;
 
 struct user_input {
@@ -35,6 +37,7 @@ int main (void)
     {
         if (ch == '\n')
         {
+
             puts("Invalid input.");
             puts("Type \"s\" to start solving equations, type \"q\" to exit program.");
             continue;
@@ -94,19 +97,19 @@ struct solve_output solve_quad (double a_s, double b_s, double c_s)
     struct solve_output solve_quad_out = {};
     double d = b_s*b_s - 4*a_s*c_s;
 
-    if (a_s == 0 && b_s != 0)
+    if (fabs(a_s) <= EPS && fabs(b_s) >= EPS)
     {
         solve_quad_out.x1 = -c_s/b_s;
         solve_quad_out.roots_num = 1;
         solve_quad_out.is_linear = 1;
     }
-    else if (a_s == 0 && b_s == 0 && c_s != 0)
+    else if (fabs(a_s) <= EPS && fabs(b_s) <= EPS && fabs(c_s) >= EPS)
         solve_quad_out.roots_num = 0;
-    else if (a_s == 0 && b_s == 0 && c_s == 0)
+    else if (fabs(a_s) <= EPS && fabs(b_s) <= EPS && fabs(c_s) <= EPS)
         solve_quad_out.roots_num = inf_roots;
-    else if (d < 0)
+    else if (d < -EPS)
         solve_quad_out.roots_num = 0;
-    else if (d == 0)
+    else if (fabs(d) <= EPS)
     {
         solve_quad_out.x1 = -b_s/(2*a_s);
         solve_quad_out.roots_num = 1;
