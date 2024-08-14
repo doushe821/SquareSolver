@@ -29,7 +29,6 @@ int main (void)
     double coefficients_values[3] = {};
     struct user_input input_check = {};
     struct solve_output output = {};
-
     puts("This application solves quadratic equations.");
     puts("Type \"s\" to start solving equations, type \"q\" to exit program.");
     int ch = 0;
