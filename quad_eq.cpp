@@ -29,14 +29,28 @@ struct check_input get_input_double (void);
 
 int doublecmp(double a, double b, double acc);
 
-void answers_output(const struct solve_output console_out);
+bool menu (double * abc_values);
+
+void answers_output(const struct solve_output answers);
 
 int main (void)
 {
-    double coefficients_values[3] = {};
-    struct solve_output output = {};
     puts("This application solves quadratic equations.");
     printf("%s", MENU_INPUT);
+    double coefficients_values[3] = {};
+    struct solve_output output = {};
+    while (!menu(coefficients_values))
+    {
+        output = solve_quad(coefficients_values[0], coefficients_values[1], coefficients_values[2]);
+        answers_output(output);
+        printf("%s", MENU_INPUT);
+    }
+    printf("Bye.");
+    return 0;
+}
+
+bool menu (double * abc_values)
+{
     int ch = 0;
     while ((ch = getchar()) != 'q')
     {
@@ -48,15 +62,13 @@ int main (void)
         if (ch == 's' && getc(stdin) == '\n')
         {
             printf("Enter coefficients: ax^2 + bx + c = 0\n");
-            bool eof_flag = get_abc(coefficients_values);
+            bool eof_flag = get_abc(abc_values);
             if (eof_flag)
             {
-                printf("%s", MENU_INPUT);
+                printf("%s%s", INVALID_IN, MENU_INPUT);
                 continue;
             }
-            output = solve_quad(coefficients_values[0], coefficients_values[1], coefficients_values[2]);
-            answers_output(output);
-            printf("%s", MENU_INPUT);
+            return 0;
         }
         else
         {
@@ -68,8 +80,7 @@ int main (void)
             }
         }
     }
-    printf("Bye.");
-    return 0;
+    return 1;
 }
 
 struct solve_output solve_quad (double a_s, double b_s, double c_s)
@@ -139,8 +150,8 @@ struct check_input get_input_double(void)
                 printf("%c", miss_input);
             printf(" is not a number, try again.\n");
         }
-        return user_input;
     }
+    return user_input;
 }
 
 int doublecmp(double a, double b, double acc)
@@ -153,21 +164,21 @@ int doublecmp(double a, double b, double acc)
     return (delta>0)-(delta<0);
 }
 
-void answers_output(const struct solve_output console_out)
+void answers_output(const struct solve_output answers)
 {
-    if (console_out.roots_num == 2)
+    if (answers.roots_num == 2)
         printf("Equation has two roots:\n"
-        "x = %lf \t x = %lf\n", console_out.x1, console_out.x2);
-    else if (console_out.roots_num == 1)
+        "x = %lf \t x = %lf\n", answers.x1, answers.x2);
+    else if (answers.roots_num == 1)
     {
-        if (console_out.is_linear)
-            printf("Equation is linear and has one root: x = %lf\n", console_out.x1);
+        if (answers.is_linear)
+            printf("Equation is linear and has one root: x = %lf\n", answers.x1);
         else
-            printf("Equation has single root: x = %lf\n", console_out.x1);
+            printf("Equation has single root: x = %lf\n", answers.x1);
     }
-    else if (console_out.roots_num == INF_ROOTS )
+    else if (answers.roots_num == INF_ROOTS )
         printf("Equation has infinite amount of roots.\n");
-    else if (!console_out.roots_num)
+    else if (!answers.roots_num)
     {
         printf("Equation has no roots.\n");
     }
