@@ -17,19 +17,23 @@ struct solve_output{
 };
 
 struct check_input{
-double value;
+double temp_value;
+double a;
+double b;
+double c;
 bool eof_flag;
+bool quit_flag;
 };
 
 struct solve_output solve_quad (double a_s, double b_s, double c_s);
 
-bool get_abc (double * cfs);
+struct check_input get_abc ();
 
 struct check_input get_input_double (void);
 
 int doublecmp(double a, double b, double acc);
 
-bool menu (double * abc_values);
+struct check_input user_menu ();
 
 void answers_output(const struct solve_output answers);
 
@@ -37,10 +41,12 @@ int main (void)
 {
     puts("This application solves quadratic equations.");
     printf("%s", MENU_INPUT);
-    double coefficients_values[3] = {};
-    while (!menu(coefficients_values))
+    while (1)
     {
-        struct solve_output output = solve_quad(coefficients_values[0], coefficients_values[1], coefficients_values[2]);
+        struct check_input coefficients_values = user_menu();
+        if (coefficients_values.quit_flag == true)
+            break;
+        struct solve_output output = solve_quad(coefficients_values.a, coefficients_values.b, coefficients_values.c);
         answers_output(output);
         printf("%s", MENU_INPUT);
     }
@@ -48,9 +54,10 @@ int main (void)
     return 0;
 }
 
-bool menu (double * abc_values)
+struct check_input user_menu ()
 {
     int ch = 0;
+    struct check_input user_menu_input = {};
     while ((ch = getchar()) != 'q')
     {
         if (ch == '\n')
@@ -61,13 +68,13 @@ bool menu (double * abc_values)
         if (ch == 's' && getc(stdin) == '\n')
         {
             printf("Enter coefficients: ax^2 + bx + c = 0\n");
-            bool eof_flag = get_abc(abc_values);
-            if (eof_flag)
+            user_menu_input = get_abc();
+            if (user_menu_input.eof_flag)
             {
                 printf("%s%s", INVALID_IN, MENU_INPUT);
                 continue;
             }
-            return 0;
+            return user_menu_input;
         }
         else
         {
@@ -79,7 +86,8 @@ bool menu (double * abc_values)
             }
         }
     }
-    return 1;
+    user_menu_input.quit_flag = true;
+    return user_menu_input;
 }
 
 struct solve_output solve_quad (double a_s, double b_s, double c_s)
@@ -87,19 +95,20 @@ struct solve_output solve_quad (double a_s, double b_s, double c_s)
     struct solve_output solve_quad_out = {};
     double d = b_s*b_s - 4*a_s*c_s;
 
-    if (!doublecmp(a_s, 0, EPS) && doublecmp(b_s, 0, EPS))
+    if (doublecmp(a_s, 0, EPS) == 0 && doublecmp(b_s, 0, EPS) != 0)
     {
         solve_quad_out.x1 = -c_s/b_s;
         solve_quad_out.roots_num = 1;
         solve_quad_out.is_linear = 1;
     }
-    else if (!doublecmp(a_s, 0, EPS) && !doublecmp(b_s, 0, EPS) && doublecmp(c_s, 0, EPS))
-        solve_quad_out.roots_num = 0;
-    else if (!doublecmp(a_s, 0, EPS) && !doublecmp(b_s, 0, EPS) && !doublecmp(c_s, 0, EPS))
-        solve_quad_out.roots_num = INF_ROOTS;
+    else if (doublecmp(a_s, 0, EPS) == 0 && doublecmp(b_s, 0, EPS) == 0)
+        if (doublecmp(c_s, 0, EPS) != 0)
+            solve_quad_out.roots_num = 0;
+        else
+            solve_quad_out.roots_num = INF_ROOTS;
     else if (doublecmp(d, 0, EPS) == -1)
         solve_quad_out.roots_num = 0;
-    else if (!doublecmp(d, 0, EPS))
+    else if (doublecmp(d, 0, EPS) == 0)
     {
         solve_quad_out.x1 = -b_s/(2*a_s);
         solve_quad_out.roots_num = 1;
@@ -114,19 +123,24 @@ struct solve_output solve_quad (double a_s, double b_s, double c_s)
     return solve_quad_out;
 }
 
-bool get_abc(double * cfs)
+struct check_input get_abc()
 {
     char coefficients_names[3] = {'a', 'b', 'c'};
-    struct check_input processed_input = {};
+    struct check_input get_abc_input = {};
+    double cfs[3] = {};
     for (int i = 0; i < 3; i++)
     {
+        struct check_input abc_check = {};
         printf("%c: ", coefficients_names[i]);
-        processed_input = get_input_double();
-        if (processed_input.eof_flag == 1)
-            return 1;
-        cfs[i] = processed_input.value;
+        abc_check = get_input_double();
+        if (abc_check.eof_flag == true)
+            return abc_check;
+        cfs[i] = abc_check.temp_value;
     }
-    return 0;
+    get_abc_input.a = cfs[0];
+    get_abc_input.b = cfs[1];
+    get_abc_input.c = cfs[2];
+    return get_abc_input;
 }
 
 struct check_input get_input_double(void)
@@ -135,7 +149,7 @@ struct check_input get_input_double(void)
     while (1)
     {
         int check = 0;
-        if ((check = scanf("%lf", &user_input.value)) == 1 && getchar() == '\n')
+        if ((check = scanf("%lf", &user_input.temp_value)) == 1 && getchar() == '\n')
             break;
         else if (check == -1)
         {
@@ -191,5 +205,7 @@ void answers_output(const struct solve_output answers)
             printf("Equation has no roots.\n");
             break;
         }
+        default:
+            abort();
     }
 }
