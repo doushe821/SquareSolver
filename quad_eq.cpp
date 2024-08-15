@@ -38,10 +38,9 @@ int main (void)
     puts("This application solves quadratic equations.");
     printf("%s", MENU_INPUT);
     double coefficients_values[3] = {};
-    struct solve_output output = {};
     while (!menu(coefficients_values))
     {
-        output = solve_quad(coefficients_values[0], coefficients_values[1], coefficients_values[2]);
+        struct solve_output output = solve_quad(coefficients_values[0], coefficients_values[1], coefficients_values[2]);
         answers_output(output);
         printf("%s", MENU_INPUT);
     }
@@ -166,20 +165,31 @@ int doublecmp(double a, double b, double acc)
 
 void answers_output(const struct solve_output answers)
 {
-    if (answers.roots_num == 2)
-        printf("Equation has two roots:\n"
-        "x = %lf \t x = %lf\n", answers.x1, answers.x2);
-    else if (answers.roots_num == 1)
+    switch (answers.roots_num)
     {
-        if (answers.is_linear)
-            printf("Equation is linear and has one root: x = %lf\n", answers.x1);
-        else
-            printf("Equation has single root: x = %lf\n", answers.x1);
-    }
-    else if (answers.roots_num == INF_ROOTS )
-        printf("Equation has infinite amount of roots.\n");
-    else if (!answers.roots_num)
-    {
-        printf("Equation has no roots.\n");
+        case 2:
+        {
+            printf("Equation has two roots:\n"
+            "x = %lf \t x = %lf\n", answers.x1, answers.x2);
+            break;
+        }
+        case 1:
+        {
+            if (answers.is_linear)
+                printf("Equation is linear and has one root: x = %lf\n", answers.x1);
+            else
+                printf("Equation has single root: x = %lf\n", answers.x1);
+            break;
+        }
+        case INF_ROOTS:
+        {
+            printf("Equation has infinite amount of roots.\n");
+            break;
+        }
+        case 0:
+        {
+            printf("Equation has no roots.\n");
+            break;
+        }
     }
 }
