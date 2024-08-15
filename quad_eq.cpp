@@ -9,31 +9,36 @@ const char INVALID_IN[]= "Invalid input\n";
 const double EPS = 1E-12;
 const int INF_ROOTS = -1;
 
-struct solve_output{
+struct solve_output
+{
     double x1;
     double x2;
     int roots_num;
     bool is_linear;
 };
-
-struct check_input{
-double temp_value;
+struct user_input
+{
 double a;
 double b;
 double c;
 bool eof_flag;
 bool quit_flag;
 };
+struct temp_input
+{
+double temp_value;
+bool eof_flag;
+};
 
 struct solve_output solve_quad (double a_s, double b_s, double c_s);
 
-struct check_input get_abc ();
+struct user_input get_abc ();
 
-struct check_input get_input_double (void);
+struct temp_input get_input_double (void);
 
 int doublecmp(double a, double b, double acc);
 
-struct check_input user_menu ();
+struct user_input user_menu ();
 
 void answers_output(const struct solve_output answers);
 
@@ -43,7 +48,7 @@ int main (void)
     printf("%s", MENU_INPUT);
     while (1)
     {
-        struct check_input coefficients_values = user_menu();
+        struct user_input coefficients_values = user_menu();
         if (coefficients_values.quit_flag == true)
             break;
         struct solve_output output = solve_quad(coefficients_values.a, coefficients_values.b, coefficients_values.c);
@@ -54,10 +59,10 @@ int main (void)
     return 0;
 }
 
-struct check_input user_menu ()
+struct user_input user_menu ()
 {
     int ch = 0;
-    struct check_input user_menu_input = {};
+    struct user_input user_menu_input = {};
     while ((ch = getchar()) != 'q')
     {
         if (ch == '\n')
@@ -71,7 +76,7 @@ struct check_input user_menu ()
             user_menu_input = get_abc();
             if (user_menu_input.eof_flag)
             {
-                printf("%s%s", INVALID_IN, MENU_INPUT);
+                printf("%s", MENU_INPUT);
                 continue;
             }
             return user_menu_input;
@@ -123,18 +128,21 @@ struct solve_output solve_quad (double a_s, double b_s, double c_s)
     return solve_quad_out;
 }
 
-struct check_input get_abc()
+struct user_input get_abc()
 {
     char coefficients_names[3] = {'a', 'b', 'c'};
-    struct check_input get_abc_input = {};
+    struct user_input get_abc_input = {};
     double cfs[3] = {};
     for (int i = 0; i < 3; i++)
     {
-        struct check_input abc_check = {};
+        struct temp_input abc_check = {};
         printf("%c: ", coefficients_names[i]);
         abc_check = get_input_double();
         if (abc_check.eof_flag == true)
-            return abc_check;
+        {
+            get_abc_input.eof_flag = true;
+            return get_abc_input;
+        }
         cfs[i] = abc_check.temp_value;
     }
     get_abc_input.a = cfs[0];
@@ -143,18 +151,18 @@ struct check_input get_abc()
     return get_abc_input;
 }
 
-struct check_input get_input_double(void)
+struct temp_input get_input_double(void)
 {
-    struct check_input user_input = {};
+    struct temp_input get_double_input = {};
     while (1)
     {
         int check = 0;
-        if ((check = scanf("%lf", &user_input.temp_value)) == 1 && getchar() == '\n')
+        if ((check = scanf("%lf", &get_double_input.temp_value)) == 1 && getchar() == '\n')
             break;
         else if (check == -1)
         {
-            user_input.eof_flag = 1;
-            return user_input;
+            get_double_input.eof_flag = 1;
+            return get_double_input;
         }
         else
         {
@@ -164,7 +172,7 @@ struct check_input get_input_double(void)
             printf(" is not a number, try again.\n");
         }
     }
-    return user_input;
+    return get_double_input;
 }
 
 int doublecmp(double a, double b, double acc)
