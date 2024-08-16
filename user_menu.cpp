@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "square_solver_structures.h"
 #include "square_solver_constants.h"
+#include "solver_input_output.h"
 #include "get_double_input.h"
 
 struct equation_input get_abc ();

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "square_solver_structures.h"
+#include "get_double_input.h"
 
 struct coef_input get_input_double(void)
 {

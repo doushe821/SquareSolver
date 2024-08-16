@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "square_solver_structures.h"
 #include "square_solver_constants.h"
+#include "solver_input_output.h"
 #include <assert.h>
 
 void answers_output(const struct solve_output answers)
