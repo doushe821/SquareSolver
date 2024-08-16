@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "square_solver_constants.h"
-#include "solver_input_output.h"
+#include "square_solver_io.h"
+#include "solve_quad.h"
 
 int main (void)
 {
