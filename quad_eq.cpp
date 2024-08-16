@@ -3,6 +3,7 @@
 #include <math.h>
 #include <stdbool.h>
 #include <limits.h>
+#include <assert.h>
 
 const char MENU_INPUT[]= "Type \"s\" to start solving equations, type \"q\" to exit program.\n";
 const char INVALID_IN[]= "Invalid input\n";
@@ -15,6 +16,7 @@ struct solve_output{
     int roots_num;
     bool is_linear;
 };
+
 struct equation_input{
     double a;
     double b;
@@ -22,6 +24,7 @@ struct equation_input{
     bool eof_flag;
     bool quit_flag;
 };
+
 struct coef_input{
     double temp_value;
     bool eof_flag;
@@ -206,6 +209,6 @@ void answers_output(const struct solve_output answers)
             break;
         }
         default:
-            abort();
+            assert(0 && "Error: unexpected number of roots.");
     }
 }
