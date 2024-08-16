@@ -1,8 +1,6 @@
 #include <math.h>
-#include "doublecmp.h"
-#include "square_solver_constants.h"
-#include "square_solver_io.h"
 #include "solve_quad.h"
+#include "doublecmp.h"
 
 struct solve_output solve_linear (double b_l, double c_l);
 
