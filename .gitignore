@@ -2,3 +2,7 @@
 *.o
 *.depend
 *.save
+*.cbp
+*.layout
+*.bmarks
+*.exe
