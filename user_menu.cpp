@@ -1,10 +1,9 @@
 #include <stdio.h>
-#include "square_solver_constants.h"
 #include "square_solver_io.h"
 #include "solve_quad.h"
-#include "get_double_input.h"
+#include "get_input_double.h"
 
-struct equation_input get_abc ();
+static struct equation_input get_abc ();
 
 struct equation_input user_menu ()
 {
@@ -21,7 +20,7 @@ struct equation_input user_menu ()
         {
             printf("Enter coefficients: ax^2 + bx + c = 0\n");
             user_menu_input = get_abc();
-            if (user_menu_input.eof_flag)
+            if (user_menu_input.eof_flag == true)
             {
                 printf("%s", MENU_INPUT);
                 continue;
@@ -42,7 +41,7 @@ struct equation_input user_menu ()
     return user_menu_input;
 }
 
-struct equation_input get_abc()
+static struct equation_input get_abc()
 {
     char coefficients_names[3] = {'a', 'b', 'c'};
     struct equation_input get_abc_input = {};
