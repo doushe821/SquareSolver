@@ -1,3 +1,8 @@
+//---------------------------------------------------------------------
+//! Gets double number.
+//!
+//! @return input Double number, EOF flag and overflow flag
+//---------------------------------------------------------------------
 #include <stdio.h>
 #include "get_input_double.h"
 #include "doublecmp.h"
@@ -14,7 +19,7 @@ struct coef_input get_input_double(void)
         {
             if (overflow_check_double(input.temp_value))
             {
-                printf("Coefficient is too big to be processed, try another one.\n");
+                printf("# Coefficient is too big to be processed, try another one.\n");
                 continue;
             }
             return input;
@@ -28,8 +33,8 @@ struct coef_input get_input_double(void)
         {
             int miss_input = 0;
             while ((miss_input = getchar()) != '\n')
-                printf("%c", miss_input);
-            printf(" is not a number, try again.\n");
+                printf("# %c", miss_input);
+            printf("#  is not a number, try again.\n");
         }
     }
 }

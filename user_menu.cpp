@@ -1,3 +1,14 @@
+//---------------------------------------------------------------------
+//! @fn user_menu Gets user's input and coefficients.
+//!
+//! @return user_menu_input Contains coefficients (a, b, c), EOF flag
+//! and quit flag (if user wants to quit).
+//!
+//! @fn get_abc Consequently gets coefficients values
+//!
+//! @return get_abc_input Also contains coefficients and EOF, overflow flags.
+//---------------------------------------------------------------------
+
 #include <stdio.h>
 #include "square_solver_io.h"
 #include "solve_quad.h"
@@ -18,7 +29,7 @@ struct equation_input user_menu ()
         }
         if (ch == 's' && getc(stdin) == '\n')
         {
-            printf("Enter coefficients: ax^2 + bx + c = 0\n");
+            printf("# Enter coefficients: ax^2 + bx + c = 0\n");
             user_menu_input = get_abc();
             if (user_menu_input.eof_flag == true)
             {

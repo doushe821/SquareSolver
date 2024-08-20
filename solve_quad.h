@@ -3,7 +3,6 @@
 
 const int INF_ROOTS = -1;
 const int DOUBLE_OVERFLOW = -2;
-const double EPS = 1E-12;
 
 struct solve_output{
     double x1;

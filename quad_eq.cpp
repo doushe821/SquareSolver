@@ -1,3 +1,13 @@
+//------------------------------------------------------------
+//! This application solves quadratic equations: ax^2 + bx + c.
+//!
+//!
+//!
+//!
+//!
+//!
+//------------------------------------------------------------
+
 #include <stdio.h>
 #include "square_solver_io.h"
 #include "solve_quad.h"
@@ -5,7 +15,7 @@
 
 int main (void)
 {
-    puts("This application solves quadratic equations.");
+    puts("# This application solves quadratic equations.");
     printf("%s", MENU_INPUT);
     while (1)
     {

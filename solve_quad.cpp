@@ -1,3 +1,24 @@
+//---------------------------------------------------------------------
+//! solve_quad Calculates roots of quadratic equation.
+//!
+//! @param [in] a, b, c Coefficients of quadratic equation.
+//!
+//! @return solve_quad_out Outputs roots and their quantity.
+//!
+//! @note INF_ROOTS is an integer constant. INF_ROOTS = -1.
+//! Means a = 0, b = 0, c = 0.
+//! @note DOUBLE_OVERFLOW is also an integer constant.
+//!DOUBLE_OVERFLOW = -2. Means numbers are to big to compute.
+//!
+//! solve_linear Calculates roots if equation is linear:
+//! a = 0, b !=0, c != 0.
+//!
+//! @param [in] b_l, c_l These are b and c coefficients of equation.
+//! @param [out] solve_linear_out Contains root of linear
+//! equation and linearity flag.
+//!
+//---------------------------------------------------------------------
+
 #include <math.h>
 #include "solve_quad.h"
 #include "doublecmp.h"
@@ -5,17 +26,18 @@
 
 static struct solve_output solve_linear (double b_l, double c_l);
 
-static bool double_overflow_check (struct solve_output roots_oc);
-
 struct solve_output solve_quad (double a_s, double b_s, double c_s)
 {
     struct solve_output solve_quad_out = {};
     double d = b_s*b_s - 4*a_s*c_s;
-    if (overflow_check_double(solve_quad_out.x1) == true || overflow_check_double(solve_quad_out.x2) == true)
+
+    if (overflow_check_double(d) == true)
     {
         solve_quad_out.roots_num = DOUBLE_OVERFLOW;
+        return solve_quad_out;
     }
-    else if (doublecmp(a_s, 0, EPS) == 0 && doublecmp(b_s, 0, EPS) != 0)
+
+    if (doublecmp(a_s, 0, EPS) == 0 && doublecmp(b_s, 0, EPS) != 0)
     {
         solve_quad_out = solve_linear(b_s, c_s);
     }
@@ -41,7 +63,6 @@ struct solve_output solve_quad (double a_s, double b_s, double c_s)
         solve_quad_out.roots_num = 2;
     }
 
-
     return solve_quad_out;
 }
 
@@ -53,4 +74,3 @@ static struct solve_output solve_linear (double b_l, double c_l)
     solve_linear_out.is_linear = 1;
     return solve_linear_out;
 }
-

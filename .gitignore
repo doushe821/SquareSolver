@@ -6,3 +6,8 @@
 *.layout
 *.bmarks
 *.exe
+*.svg
+*.png
+*.js
+*latex
+*html
