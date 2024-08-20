@@ -1,9 +1,0 @@
-#ifndef OVERFLOW_CHECK_DOUBLE_H_INCLUDED
-#define OVERFLOW_CHECK_DOUBLE_H_INCLUDED
-
-const double MAX_DOUBLE = 1.7976931348623157E+308;
-const double MIN_DOUBLE = 2.225073858507201E-308;
-
-bool overflow_check_double (double value_ofc);
-
-#endif // OVERFLOW_CHECK_DOUBLE_H_INCLUDED

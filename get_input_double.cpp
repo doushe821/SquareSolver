@@ -5,10 +5,10 @@
 //---------------------------------------------------------------------
 
 #include <stdio.h>
+#include <math.h>
 #include "get_input_double.h"
 #include "doublecmp.h"
 #include "solve_quad.h"
-#include "overflow_check_double.h"
 
 struct coef_input get_input_double(void)
 {
@@ -18,7 +18,7 @@ struct coef_input get_input_double(void)
         int check = 0;
         if ((check = scanf("%lf", &input.temp_value)) == 1 && getchar() == '\n')
         {
-            if (overflow_check_double(input.temp_value))
+            if (isfinite(input.temp_value) == false)
             {
                 printf("# Coefficient is too big to be processed, try another one.\n");
                 continue;

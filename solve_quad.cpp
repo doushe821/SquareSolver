@@ -1,7 +1,6 @@
 #include <math.h>
 #include "solve_quad.h"
 #include "doublecmp.h"
-#include "overflow_check_double.h"
 
 //---------------------------------------------------------------------
 //! Calculates roots if equation is linear: a = 0, b !=0, c != 0.
@@ -32,7 +31,7 @@ struct solve_output solve_quad (double a_s, double b_s, double c_s)
     struct solve_output solve_quad_out = {};
     double d = b_s*b_s - 4*a_s*c_s;
 
-    if (overflow_check_double(d) == true)
+    if (isfinite(d) == false)
     {
         solve_quad_out.roots_num = DOUBLE_OVERFLOW;
         return solve_quad_out;
