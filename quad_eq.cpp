@@ -1,11 +1,9 @@
 //------------------------------------------------------------
-//! This application solves quadratic equations: ax^2 + bx + c.
-//!
-//!
-//!
-//!
-//!
-//!
+//! @mainpage This application solves quadratic equations: ax^2 + bx + c.
+//------------------------------------------------------------
+//------------------------------------------------------------
+//! Main function. Gets coefficients with user_menu(), gives the, to
+//! solve_quad, then calls answers_output() to display answers.
 //------------------------------------------------------------
 
 #include <stdio.h>

@@ -1,8 +1,9 @@
 //---------------------------------------------------------------------
 //! Gets double number.
 //!
-//! @return input Double number, EOF flag and overflow flag
+//! @return Double number, EOF flag and overflow flag.
 //---------------------------------------------------------------------
+
 #include <stdio.h>
 #include "get_input_double.h"
 #include "doublecmp.h"

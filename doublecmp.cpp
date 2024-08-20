@@ -1,11 +1,11 @@
 //---------------------------------------------------------------------
 //! Compares 2 double numbers with set accuracy.
 //!
-//! @param [in] a First number
-//! @param [in] b Second number
-//! @param [in] acc Minimal possible difference between numbers
+//! @param [in] a First number.
+//! @param [in] b Second number.
+//! @param [in] acc Minimal possible difference between numbers.
 //!
-//! @note Return 0 if numbers are equal, 1 if a > b and -1 if a < b
+//! @note Returns 0 if numbers are equal, 1 if a > b and -1 if a < b.
 //---------------------------------------------------------------------
 
 #include <math.h>

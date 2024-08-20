@@ -1,20 +1,21 @@
-//---------------------------------------------------------------------
-//! @fn user_menu Gets user's input and coefficients.
-//!
-//! @return user_menu_input Contains coefficients (a, b, c), EOF flag
-//! and quit flag (if user wants to quit).
-//!
-//! @fn get_abc Consequently gets coefficients values
-//!
-//! @return get_abc_input Also contains coefficients and EOF, overflow flags.
-//---------------------------------------------------------------------
-
 #include <stdio.h>
 #include "square_solver_io.h"
 #include "solve_quad.h"
 #include "get_input_double.h"
 
+//---------------------------------------------------------------------
+//! Calls for get_input_double() 3 times, puts all values in structure
+//! equation_input.
+//!
+//! @return Coefficients' values and EOF flag (if user types EOF).
+//---------------------------------------------------------------------
+
 static struct equation_input get_abc ();
+
+//---------------------------------------------------------------------
+//! @note Processes user's input,
+//! @return Coefficients (a, b, c) with EOF and quit flag.
+//---------------------------------------------------------------------
 
 struct equation_input user_menu ()
 {
