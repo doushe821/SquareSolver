@@ -34,8 +34,8 @@ struct coef_input get_input_double(void)
         {
             int miss_input = 0;
             while ((miss_input = getchar()) != '\n')
-                printf("# %c", miss_input);
-            printf("#  is not a number, try again.\n");
+                printf("%c", miss_input);
+            printf(" is not a number, try again.\n");
         }
     }
 }

@@ -13,6 +13,6 @@ struct equation_input{
 };
 
 void answers_output(const struct solve_output answers);
-struct equation_input user_menu ();
+struct equation_input user_menu();
 
 #endif // USER_MENU_H_INCLUDED
