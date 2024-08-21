@@ -14,24 +14,26 @@
 #include "square_solver_io.h"
 #include "solve_quad.h"
 #include "doublecmp.h"
-#include "console_commands.h"
+#include "get_console_commands.h"
+#include "execute_console_command.h"
+
+struct command_line_commands{
+char* command_name;
+int command_code;
+};
 
 int main (int argc, char* argv[])
 {
-    if (argc > 1)
+    for (int i = 1; i < argc; i++)
     {
-        struct console_coef_input c_coefs = console_commands(argc, argv);
-
-        assert(!c_coefs.error_flag && "Console input error.");
-
-        struct solve_output console_output = solve_quad(c_coefs.a, c_coefs.b, c_coefs.c);
-        answers_output(console_output);
-        return 0;
+        execute_console_command(get_console_commands(argc, argv), i, argv);
     }
-        puts("# This application solves quadratic equations.");
-        printf("%s", MENU_INPUT);
-        while (1)
-        {
+    if (argc > 1)
+        return 0;
+    puts("# This application solves quadratic equations.");
+    printf("%s", MENU_INPUT);
+    while (1)
+    {
         struct equation_input coefficients_values = user_menu();
         if (coefficients_values.quit_flag == true)
             break;
@@ -39,6 +41,6 @@ int main (int argc, char* argv[])
         answers_output(output);
         printf("%s", MENU_INPUT);
     }
-        printf("Bye.");
-        return 0;
+    printf("Bye.");
+    return 0;
 }

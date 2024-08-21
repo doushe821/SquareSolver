@@ -12,13 +12,6 @@ const char HELP[] = "# This application can solve quadratic equations.\n"
 "If you want to enter coefficients through console, type \"coefficients\" and then type your coefficients.\n";
 const char UNKNOWN_COMMAND[]= "Unknown command. Enter help if you need help.\n";
 
-struct console_coef_input{
-    double a;
-    double b;
-    double c;
-    bool overflow_flag;
-};
-
 int get_console_commands(int sc, char* v[]);
 
 #endif // CONSOLE_COMMANDS_H_INCLUDED

@@ -10,14 +10,14 @@
 //! @return Coefficients' values and EOF flag (if user types EOF).
 //---------------------------------------------------------------------
 
-static struct equation_input get_abc ();
+static struct equation_input get_abc();
 
 //---------------------------------------------------------------------
 //! @note Processes user's input,
 //! @return Coefficients (a, b, c) with EOF and quit flag.
 //---------------------------------------------------------------------
 
-struct equation_input user_menu ()
+struct equation_input user_menu()
 {
     int ch = 0;
     struct equation_input user_menu_input = {};

@@ -18,7 +18,7 @@ struct strtd_output str_to_double(char* str)
     struct strtd_output output = {};
     if (str[k] != '-' && str[k] != '+' && !isdigit[str[k]])
     {
-        output.input_error = true;
+        output.input_error_flag = true;
         return output;
     }
     double sign = (str[k] == '-') ? -1 : 1;
@@ -40,6 +40,5 @@ struct strtd_output str_to_double(char* str)
         }
         output.d_value = sign*output.d_value/power;
     }
-    printf("strtd: %lf\n", output.d_value);
     return output;
 }

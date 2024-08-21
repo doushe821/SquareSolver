@@ -12,37 +12,51 @@
 #include "str_to_double.h"
 #include "console_commands.h"
 
-struct console_coef_input console_commands(int c, char* v[])
-{
-    struct console_coef_input coef_input = {};
-    for (int i = 1; i <= c; i++)
+static struct console_coef_input get_abc_console (char* str[], int* line_n);
+
+int get_console_commands (int c, char* v[])
     {
-        if (strcmp(v[i], "help") == 0)
+    struct console_coef_input coef_input = {};
+
+    for (int i = 1; i <= c; i++)
         {
-            printf("%s", HELP);
-            exit (0);
-        }
-        else if (strcmp(v[i], "version") == 0)
-        {
-                printf("%s", VERSION);
-                exit (0);
-        }
-        else if (strcmp(v[i], "coefficients") == 0)
-        {
-            struct strtd_output cons_val = str_to_double(v[++i]);
-            coef_input.a = cons_val.d_value;
-            cons_val = str_to_double(v[++i]);
-            coef_input.b = cons_val.d_value;
-            cons_val = str_to_double(v[++i]);
-            coef_input.c = cons_val.d_value;
-            return coef_input;
-        }
+        if (strcmp (v[i], "-help") == 0)
+            {
+            return HELP_CL;
+            }
+               else if (strcmp (v[i], "-version") == 0)
+            {
+            return VERSION_CL;
+            }
+        else if (strcmp (v[i], "-coefficients") == 0)
+            {
+            return COEFFICIENTS_CL;
+            }
         else
-        {
-            printf("%s", UNKNOWN_COMMAND);
-            exit (0);
+            {
+            return UN_COMMAND_CL;
+            }
         }
     }
-    coef_input.error_flag = true;
-    return coef_input;
-}
+
+static struct console_coef_input get_abc_console (char* str[], int* line_n)
+    {
+    struct console_coef_input input = {};
+    struct strtd_output converted_double  = {};
+    double temp_coef_storage[3] = {};
+
+    for (int n = 0; n < 3; n++)
+        {
+        converted_double = str_to_double (str[++ (*line_n)]);
+
+        if (converted_double.input_error_flag == true)
+            exit (0);
+
+        temp_coef_storage[n] = converted_double.d_value;
+        }
+
+    input.a = temp_coef_storage[0];
+    input.b = temp_coef_storage[1];
+    input.c = temp_coef_storage[2];
+    return input;
+    }
