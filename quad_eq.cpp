@@ -8,7 +8,9 @@
 
 #include <stdio.h>
 #include <ctype.h>
+#include <stdbool.h>
 #include <string.h>
+#include <assert.h>
 #include "square_solver_io.h"
 #include "solve_quad.h"
 #include "doublecmp.h"
@@ -19,12 +21,10 @@ int main (int argc, char* argv[])
     if (argc > 1)
     {
         struct console_coef_input c_coefs = console_commands(argc, argv);
-        struct equation_input console_coefficients_values = {};
-        console_coefficients_values.a = c_coefs.a;
-        console_coefficients_values.b = c_coefs.b;
-        console_coefficients_values.c = c_coefs.c;
-        struct solve_output console_output = solve_quad(console_coefficients_values.a, console_coefficients_values.b,
-        console_coefficients_values.c);
+
+        assert(!c_coefs.error_flag && "Console input error.");
+
+        struct solve_output console_output = solve_quad(c_coefs.a, c_coefs.b, c_coefs.c);
         answers_output(console_output);
         return 0;
     }

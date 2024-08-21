@@ -8,18 +8,38 @@
 
 #include <stdlib.h>
 #include <ctype.h>
-#include <stdlib.h>
-#include <math.h>
+#include <stdio.h>
+#include <stdbool.h>
+#include "str_to_double.h"
 
-double str_to_double(char* str)
+struct strtd_output str_to_double(char* str)
 {
-    int i = 0;
-    double strtod_val = 0, power = 0, sign = 0;
-    if (str[i] != '-' && str[i] != '+' && !isdigit[str[i]])
+    int k = 0;
+    struct strtd_output output = {};
+    if (str[k] != '-' && str[k] != '+' && !isdigit[str[k]])
     {
-        printf("Wrong input, enter a number with floating point as coefficient.\n");
-        exit (1);
+        output.input_error = true;
+        return output;
     }
-    sign = (str[i] == '-') ? -1 : 1;
-    return strtod_val*sign;
+    double sign = (str[k] == '-') ? -1 : 1;
+    if (str[k] == '-' || str[k] == '+')
+        k++;
+    if(isdigit(str[k]))
+        output.d_value = str[k] - '0';
+    while(isdigit(str[++k]))
+    {
+        output.d_value = output.d_value*10 + (str[k] - '0');
+    }
+    if (str[k] == '.')
+    {
+        double  power = 1;
+        while(isdigit(str[++k]))
+        {
+            output.d_value = output.d_value*10 + (str[k] - '0');
+            power *= 10;
+        }
+        output.d_value = sign*output.d_value/power;
+    }
+    printf("strtd: %lf\n", output.d_value);
+    return output;
 }

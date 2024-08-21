@@ -12,6 +12,7 @@ struct console_coef_input{
     int a;
     int b;
     int c;
+    bool error_flag;
 };
 
 struct console_coef_input console_commands(int c, char* v[]);

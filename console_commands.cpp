@@ -14,22 +14,28 @@
 
 struct console_coef_input console_commands(int c, char* v[])
 {
-    static struct console_coef_input coef_input = {};
-    for (int i = 0; i < c; i++)
+    struct console_coef_input coef_input = {};
+    for (int i = 1; i <= c; i++)
     {
-        if (strcmp(v[i], "help") == false)
+        if (strcmp(v[i], "help") == 0)
         {
             printf("%s", HELP);
             exit (0);
         }
-        else if (strcmp(v[i], "version") == false)
+        else if (strcmp(v[i], "version") == 0)
         {
                 printf("%s", VERSION);
                 exit (0);
         }
-        else if (strcmp(v[i], "coefficients"))
+        else if (strcmp(v[i], "coefficients") == 0)
         {
-
+            struct strtd_output cons_val = str_to_double(v[++i]);
+            coef_input.a = cons_val.d_value;
+            cons_val = str_to_double(v[++i]);
+            coef_input.b = cons_val.d_value;
+            cons_val = str_to_double(v[++i]);
+            coef_input.c = cons_val.d_value;
+            return coef_input;
         }
         else
         {
@@ -37,4 +43,6 @@ struct console_coef_input console_commands(int c, char* v[])
             exit (0);
         }
     }
+    coef_input.error_flag = true;
+    return coef_input;
 }

@@ -3,7 +3,7 @@
 
 struct strtd_output{
     double d_value;
-    int wrong_input;
+    bool input_error;
 };
 
 struct strtd_output str_to_double(char* str);
