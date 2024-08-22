@@ -15,6 +15,15 @@
 static struct equation_input get_abc();
 
 //---------------------------------------------------------------------
+//! Gets string from stdin, deletes \n, adds \0 in the end.
+//!
+//! @param [i] max_line_length Maximum string's length.
+//!
+//! @retutn String.
+//---------------------------------------------------------------------
+char* s_gets (char* line, int max_line_length);
+
+//---------------------------------------------------------------------
 //! @note Processes user's input,
 //! @return Coefficients (a, b, c) with EOF and quit flag.
 //---------------------------------------------------------------------
@@ -47,13 +56,38 @@ struct equation_input user_menu()
             "So make sure your file consists only of these elements and exists in directory of SquareSolver.exe.\n"
             "Enter file's name: ");
             char fileName[MAX_FILENAME_LENGTH] = {};
-            scanf("%s", &fileName);
-            while (getchar() != '\n')
-                continue;
+            s_gets(fileName, MAX_FILENAME_LENGTH);
             FILE* inputFile = fopen(fileName, "r");
             if (inputFile == NULL)
             {
-                fprintf(stderr, "Cannot open file.\n");  //  errno
+                switch (errno)
+                {
+                    case EACCES:
+                    {
+                        perror("Permission denied");
+                        break;
+                    }
+                    case EFBIG:
+                    {
+                        perror("File is too big");
+                        break;
+                    }
+                    case ENAMETOOLONG:
+                    {
+                        perror("File name is too big");
+                        break;
+                    }
+                    case ENOENT:
+                    {
+                        perror("File not found");
+                        break;
+                    }
+                    default:
+                    {
+                        fprintf(stderr, "Unknown error.\n");
+                        break;
+                    }
+                }
                 printf("\n%s", MENU_INPUT);
                 continue;
             }
@@ -103,4 +137,21 @@ static struct equation_input get_abc()
     get_abc_input.b = cfs[1];
     get_abc_input.c = cfs[2];
     return get_abc_input;
+}
+
+char* s_gets (char* line, int max_line_length)
+{
+    char* ret_val = fgets(line, max_line_length, stdin);
+    int i = 0;
+    if(ret_val)
+    {
+        while(line[i] != '\n' && line[i] != '\0')
+            i++;
+        if(line[i] == '\n')
+            line[i] = '\0';
+        else
+            while(getchar() != '\n')
+                continue;
+    }
+    return line;
 }
