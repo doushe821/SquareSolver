@@ -1,6 +1,8 @@
 #include <stdio.h>
+#include <errno.h>
 #include "square_solver_io.h"
 #include "solve_quad.h"
+#include "square_solver_io.h"
 #include "get_input_double.h"
 
 //---------------------------------------------------------------------
@@ -38,6 +40,33 @@ struct equation_input user_menu()
                 continue;
             }
             return user_menu_input;
+        }
+        else if(ch == 'f' && getc(stdin) == '\n')
+        {
+            printf("Program read triads of coefficients divided by space or end of line.\n"
+            "So make sure your file consists only of these elements and exists in directory of SquareSolver.exe.\n"
+            "Enter file's name: ");
+            char fileName[MAX_FILENAME_LENGTH] = {};
+            scanf("%s", &fileName);
+            while (getchar() != '\n')
+                continue;
+            FILE* inputFile = fopen(fileName, "r");
+            if (inputFile == NULL)
+            {
+                fprintf(stderr, "Cannot open file.\n");  //  errno
+                printf("\n%s", MENU_INPUT);
+                continue;
+            }
+            else
+            {
+                while(fscanf(inputFile, "%lf %lf %lf", &user_menu_input.a, &user_menu_input.b, &user_menu_input.c) == 3)
+                {
+                    printf("\nCoefficients: a = %lg, b = %lg, c = %lg\n", user_menu_input.a, user_menu_input.b, user_menu_input.c);
+                    struct solve_output f_output = solve_quad(user_menu_input.a, user_menu_input.b, user_menu_input.c);
+                    answers_output(f_output);
+                }
+                printf("\n%s", MENU_INPUT);
+            }
         }
         else
         {

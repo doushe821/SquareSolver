@@ -19,12 +19,11 @@
 
 int main (int argc, char* argv[])
 {
-    int cl_values[3] = {};
-
     const struct command_line_option square_solver_commands[] = {
     {"--help", HELP_CL},
     {"--version", VERSION_CL},
-    {"--coefficients", COEFFICIENTS_CL}
+    {"--coefficients", COEFFICIENTS_CL},
+    {"--test", TEST}
 };
 
     for (int i = 1; i < argc; i++)
@@ -33,6 +32,7 @@ int main (int argc, char* argv[])
     }
     if (argc > 1)
         return 0;
+
     puts("# This application solves quadratic equations.");
     printf("%s", MENU_INPUT);
     while (1)

@@ -1,8 +1,10 @@
 #ifndef USER_MENU_H_INCLUDED
 #define USER_MENU_H_INCLUDED
 
-const char MENU_INPUT[]= "# Type \"s\" to start solving equations, type \"q\" to exit program.\n";
+const char MENU_INPUT[]= "# Type \"s\" to start solving equations, type \"q\" to exit program.\n"
+"# Type \"f\" to get input from file.\n";
 const char INVALID_IN[]= "# Invalid input\n";
+const int MAX_FILENAME_LENGTH = 100;
 
 struct equation_input{
     double a;
