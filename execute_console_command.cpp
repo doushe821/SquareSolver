@@ -2,8 +2,9 @@
 #include "get_console_commands.h"
 #include "solve_quad_command_line.h"
 #include "str_to_double.h"
+#include "execute_console_command.h"
 
-void execute_console_command(int c, int j, char* v[])
+void execute_console_command(int c, int* j, char* const v[])
 {
     switch (c)
     {

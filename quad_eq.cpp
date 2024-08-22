@@ -17,16 +17,19 @@
 #include "get_console_commands.h"
 #include "execute_console_command.h"
 
-struct command_line_commands{
-char* command_name;
-int command_code;
-};
-
 int main (int argc, char* argv[])
 {
+    int cl_values[3] = {};
+
+    const struct command_line_option square_solver_commands[] = {
+    {"--help", HELP_CL},
+    {"--version", VERSION_CL},
+    {"--coefficients", COEFFICIENTS_CL}
+};
+
     for (int i = 1; i < argc; i++)
     {
-        execute_console_command(get_console_commands(argc, argv), i, argv);
+        execute_console_command(get_console_commands(i, argv, square_solver_commands), &i, argv);
     }
     if (argc > 1)
         return 0;
