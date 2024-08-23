@@ -9,7 +9,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "str_to_double.h"
 #include "console_commands.h"
 
 static struct console_coef_input get_abc_console (char* str[], int* line_n);

@@ -13,7 +13,7 @@
 #include <stdio.h>
 #include "square_solver_io.h"
 #include "solve_quad.h"
-#include <assert.h>
+#include "C_ASSERT.h"
 
 void answers_output(const struct solve_output answers)
 {
@@ -49,6 +49,6 @@ void answers_output(const struct solve_output answers)
             break;
         }
         default:
-            assert(0 && "Error: unexpected number of roots.");
+            c_assert(0, "Error: unexpected number of roots.");
     }
 }

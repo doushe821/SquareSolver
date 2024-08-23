@@ -9,21 +9,24 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include <string.h>
-#include <assert.h>
 #include "square_solver_io.h"
+#include "C_ASSERT.h"
 #include "solve_quad.h"
 #include "doublecmp.h"
 #include "command_line_io.h"
+#include "vibrant_print.h"
 
 int main (int argc, char* argv[])
 {
+    c_assert(!strcmp(argv[0], "quad_eq"), "Command line input failure.");
     const struct command_line_option square_solver_commands[] = {
     {"--help", HELP_CL},
     {"--version", VERSION_CL},
     {"--coefficients", COEFFICIENTS_CL},
     {"--test", TEST}
-};
+    };
 
     for (int i = 1; i < argc; i++)
     {

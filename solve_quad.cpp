@@ -58,7 +58,6 @@ struct solve_output solve_quad (double a_s, double b_s, double c_s)
         solve_quad_out.x2 = (-b_s - d_sqrt)/(2*a_s);
         solve_quad_out.roots_num = 2;
     }
-
     return solve_quad_out;
 }
 

@@ -5,7 +5,7 @@
 #include "solve_quad.h"
 #include "solve_quad_command_line.h"
 #include "square_solver_io.h"
-#include "str_to_double.h"
+#include "C_ASSERT.h"
 
 //------------------------------------------------------
 //! Iteratively calls strtod() to get coefficients.
@@ -32,8 +32,7 @@ void solve_quad_command_line(int* k, char* values_str[])
     struct console_coef_input coeffs = get_abc_console(values_str, k);
     if(coeffs.missinput_flag == true)
         {
-            printf("Wrong input, please enter only numbers with floating point.\n");
-            exit(1);
+            c_assert(0, "Wrong coefficients, enter numbers with floating point (exponential notation is allowed).");
         }
     struct solve_output cons_answers = solve_quad(coeffs.a, coeffs.b, coeffs.c);
     answers_output(cons_answers);
@@ -41,7 +40,7 @@ void solve_quad_command_line(int* k, char* values_str[])
 
 static struct console_coef_input get_abc_console(char* str[], int* line_n)
 {
-    struct console_coef_input input = {};;
+    struct console_coef_input input = {};
     double temp_coef_storage[3] = {};
     for (int n = 0; n < 3; n++)
     {

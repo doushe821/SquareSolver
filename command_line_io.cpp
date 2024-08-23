@@ -4,14 +4,17 @@
 #include <stdlib.h>
 #include "command_line_io.h"
 #include "solve_quad_command_line.h"
-#include "str_to_double.h"
 #include "solve_quad.h"
+#include "square_solver_io.h"
 #include "doublecmp.h"
+#include "vibrant_print.h"
+
+#include "C_ASSERT.h"
 
 struct TestData data[NUMBER_OF_TESTS]
 //   a          b           c           x1ref     x2ref     nRoots
 {
-    {0        , 0         , 0         , 0       , 0       , INF_ROOTS},  //a, b, c, x1ref, x2ref, nRoots.
+    {0        , 0         , 0         , 0       , 0       , INF_ROOTS      },
     {1        , 0         , 0         , 0       , 0       , 1              },
     {0        , 22        , 133       , -6.04545, 0       , 1              },
     {0        , 0         , 89        , 0       , 0       , 0              },
@@ -65,22 +68,22 @@ int get_console_commands(int n, char* cl_name[], const struct command_line_optio
             return option[j].val;
         }
     }
-    return -1;
+    c_assert(0, "Unexpected behavior, contact dev(contacts undefined).");
 }
 
 //---------------------------------------------------------------------
 //! Executes console commands.
 //!
-//! @param [in] c
+//! @param [in] flag
 //!
 //! @param [in] j
 //!
 //! @param [in] v
 //---------------------------------------------------------------------
 
-void execute_console_command(int c, int* j, char* v[])
+void execute_console_command(int flag, int* j, char* v[])
 {
-    switch (c)
+    switch (flag)
     {
         case HELP_CL:
         {
@@ -99,7 +102,7 @@ void execute_console_command(int c, int* j, char* v[])
         }
         case TEST:
         {
-            RunTest(data, EPS5);
+            RunTest(data, EPS_CL);
             break;
         }
         case UN_COMMAND_CL:
@@ -108,40 +111,37 @@ void execute_console_command(int c, int* j, char* v[])
             break;
         }
         default:
-            break;
+            c_assert(0, "Unexpected behavior, contact dev(contacts undefined).");
     }
 }
 
 void RunTest(struct TestData test[], double test_eps)
 {
-    const char* RED = "\033[1;31m";
-    const char* GREEN = "\033[32m";
-    const char* RESET = "\033[0m";
     struct solve_output test_output = {};
-    int errors[NUMBER_OF_TESTS] = {};
+    int results[NUMBER_OF_TESTS] = {};
     int err_num = 0;
     for (int i = 0; i < NUMBER_OF_TESTS; i++)
     {
         test_output = solve_quad(test[i].a, test[i].b, test[i].c);
-        if (test_output.roots_num != test[i].nRoots || doublecmp(test_output.x1, test[i].x1ref, EPS5) != 0 || doublecmp(test_output.x2, test[i].x2ref, EPS5) != 0)
+        if (test_output.roots_num != test[i].nRoots || doublecmp(test_output.x1, test[i].x1ref, EPS_CL) != 0 || doublecmp(test_output.x2, test[i].x2ref, EPS_CL) != 0)
         {
-            printf("%sExpected: %d, %lg, %lg. Got: %d, %lg, %lg.%s\n", RED, test[i].nRoots, test[i].x1ref, test[i].x2ref, test_output.roots_num, \
-            test_output.x1, test_output.x2, RESET);
-            errors[i] = 1;
+            vibrant_print(red, stdout, "Expected: %d, %lg, %lg. Got: %d, %lg, %lg", test[i].nRoots, test[i].x1ref, test[i].x2ref, test_output.roots_num,
+                          test_output.x1, test_output.x2);
+            results[i] = 1;
             err_num++;
         }
-        printf("Test %d: %d\n", i+1, errors[i]);
+        printf("Test %d: %d\n", i+1, results[i]);
     }
     printf("%sErrors:%s\n", RED, RESET);
     for (int i = 0; i < NUMBER_OF_TESTS; i++)
     {
-        if(errors[i])
-            printf("%s%d%s, ", RED, errors[i], RESET);
+        if(results[i])
+            vibrant_print(red, stdout, "%d, ", results[i]);
         else
-            printf("%s%d, %s", GREEN, errors[i], RESET);
+            vibrant_print(green, stdout, "%d, ", results[i]);
     }
     if(!err_num)
-        printf("%sNo errors, all good.\n%s", GREEN, RESET);
+        vibrant_print(green, stdout, "No errors, all good.\n");
     else
         printf("%d errors. Fix.\n", err_num);
 }
