@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <errno.h>
+#include <string.h>
+#include <math.h>
 #include "square_solver_io.h"
 #include "solve_quad.h"
 #include "square_solver_io.h"
@@ -15,18 +17,31 @@
 static struct equation_input get_abc();
 
 //---------------------------------------------------------------------
-//! Gets string from stdin, deletes \n, adds \0 in the end.
+//! Gets string with length restriction from stdin, replaces \n with \0.
 //!
-//! @param [i] max_line_length Maximum string's length.
+//! @param [out] line Writes input into given string.
 //!
-//! @retutn String.
+//! @param [in] max_line_length  String length restriction.
+//!
+//! @return Same line that goes into line variable.
 //---------------------------------------------------------------------
+
 char* s_gets (char* line, int max_line_length);
+
+//---------------------------------------------------------------------
+//! Processes file input.
+//---------------------------------------------------------------------
+
+void process_file_input ();
 
 //---------------------------------------------------------------------
 //! @note Processes user's input,
 //! @return Coefficients (a, b, c) with EOF and quit flag.
 //---------------------------------------------------------------------
+
+
+    const char* RED_COL = "\033[1;31m";
+    const char* RESET_COL = "\033[0m";
 
 struct equation_input user_menu()
 {
@@ -52,55 +67,7 @@ struct equation_input user_menu()
         }
         else if(ch == 'f' && getc(stdin) == '\n')
         {
-            printf("Program read triads of coefficients divided by space or end of line.\n"
-            "So make sure your file consists only of these elements and exists in directory of SquareSolver.exe.\n"
-            "Enter file's name: ");
-            char fileName[MAX_FILENAME_LENGTH] = {};
-            s_gets(fileName, MAX_FILENAME_LENGTH);
-            FILE* inputFile = fopen(fileName, "r");
-            if (inputFile == NULL)
-            {
-                switch (errno)
-                {
-                    case EACCES:
-                    {
-                        perror("Permission denied");
-                        break;
-                    }
-                    case EFBIG:
-                    {
-                        perror("File is too big");
-                        break;
-                    }
-                    case ENAMETOOLONG:
-                    {
-                        perror("File name is too big");
-                        break;
-                    }
-                    case ENOENT:
-                    {
-                        perror("File not found");
-                        break;
-                    }
-                    default:
-                    {
-                        fprintf(stderr, "Unknown error.\n");
-                        break;
-                    }
-                }
-                printf("\n%s", MENU_INPUT);
-                continue;
-            }
-            else
-            {
-                while(fscanf(inputFile, "%lf %lf %lf", &user_menu_input.a, &user_menu_input.b, &user_menu_input.c) == 3)
-                {
-                    printf("\nCoefficients: a = %lg, b = %lg, c = %lg\n", user_menu_input.a, user_menu_input.b, user_menu_input.c);
-                    struct solve_output f_output = solve_quad(user_menu_input.a, user_menu_input.b, user_menu_input.c);
-                    answers_output(f_output);
-                }
-                printf("\n%s", MENU_INPUT);
-            }
+            process_file_input();
         }
         else
         {
@@ -137,6 +104,40 @@ static struct equation_input get_abc()
     get_abc_input.b = cfs[1];
     get_abc_input.c = cfs[2];
     return get_abc_input;
+}
+
+void process_file_input ()
+{
+    printf("# Program read triads of coefficients divided by space or end of line.\n"
+            "# So make sure your file consists only of these elements and exists in directory of SquareSolver.exe.\n"
+            "# Enter file's name: ");
+    char fileName[MAX_FILENAME_LENGTH] = {};
+    s_gets(fileName, MAX_FILENAME_LENGTH);
+    FILE* inputFile = fopen(fileName, "r");
+    if (inputFile == NULL)
+    {
+        fprintf(stderr, "%s%s%s\n", RED_COL, strerror(errno), RESET_COL);
+        printf("\n%s", MENU_INPUT);
+    }
+    else
+    {
+        struct equation_input file_input = {};
+        while(fscanf(inputFile, "%lf %lf %lf", &file_input.a, &file_input.b, &file_input.c) == 3)
+        {
+            if(!isfinite(file_input.a) || !isfinite(file_input.b) || !isfinite(file_input.c))
+            {
+                printf("Some coefficients are too big to be processed. Rewrite them.\n");
+                break;
+            }
+            else
+            {
+            printf("\nCoefficients: a = %lg, b = %lg, c = %lg\n", file_input.a, file_input.b, file_input.c);
+            struct solve_output f_output = solve_quad(file_input.a, file_input.b, file_input.c);
+            answers_output(f_output);
+            }
+        }
+        printf("\n%s", MENU_INPUT);
+    }
 }
 
 char* s_gets (char* line, int max_line_length)

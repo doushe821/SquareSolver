@@ -4,8 +4,19 @@
 #include "solve_quad_command_line.h"
 #include "str_to_double.h"
 #include "execute_console_command.h"
-#include "UnitTest.h"
 #include "solve_quad.h"
+#include "doublecmp.h"
+
+//---------------------------------------------------------------------
+//! Runs unit test. Data should be written inside execute_console_command.cpp as TestData structure array.
+//!
+//! @param [in] test TestData structure array.
+//!
+//! @param test_eps Accuracy for comparing answers with actual ones from tests[].
+//!
+//---------------------------------------------------------------------
+
+void RunTest(struct TestData test[], double test_eps);
 
 struct TestData data[NUMBER_OF_TESTS]{
     {0        , 0         , 0         , 0       , 0       , INF_ROOTS},  //a, b, c, x1ref, x2ref, nRoots.
@@ -33,7 +44,8 @@ struct TestData data[NUMBER_OF_TESTS]{
     {-INFINITY, INFINITY  , NAN       , 0       , 0       , DOUBLE_OVERFLOW},
     {-INFINITY, -INFINITY , NAN       , 0       , 0       , DOUBLE_OVERFLOW},
     {1.5      , 2.7       , -11.2     , 1.97692 , -3.77692,               2}};
-void execute_console_command(int c, int* j, char* const v[])
+
+void execute_console_command(int c, int* j, char* v[])
 {
     switch (c)
     {
@@ -54,7 +66,7 @@ void execute_console_command(int c, int* j, char* const v[])
         }
         case TEST:
         {
-            RunTest(data);
+            RunTest(data, EPS5);
             break;
         }
         case UN_COMMAND_CL:
@@ -65,4 +77,38 @@ void execute_console_command(int c, int* j, char* const v[])
         default:
             break;
     }
+}
+
+void RunTest(struct TestData test[], double test_eps)
+{
+    const char* RED = "\033[1;31m";
+    const char* GREEN = "\033[32m";
+    const char* RESET = "\033[0m";
+    struct solve_output test_output = {};
+    int errors[NUMBER_OF_TESTS] = {};
+    int err_num = 0;
+    for (int i = 0; i < NUMBER_OF_TESTS; i++)
+    {
+        test_output = solve_quad(test[i].a, test[i].b, test[i].c);
+        if (test_output.roots_num != test[i].nRoots || doublecmp(test_output.x1, test[i].x1ref, EPS5) != 0 || doublecmp(test_output.x2, test[i].x2ref, EPS5) != 0)
+        {
+            printf("%sExpected: %d, %lg, %lg. Got: %d, %lg, %lg.%s\n", RED, test[i].nRoots, test[i].x1ref, test[i].x2ref, test_output.roots_num, \
+            test_output.x1, test_output.x2, RESET);
+            errors[i] = 1;
+            err_num++;
+        }
+        printf("Test %d: %d\n", i+1, errors[i]);
+    }
+    printf("%sErrors:%s\n", RED, RESET);
+    for (int i = 0; i < NUMBER_OF_TESTS; i++)
+    {
+        if(errors[i])
+            printf("%s%d%s, ", RED, errors[i], RESET);
+        else
+            printf("%s%d, %s", GREEN, errors[i], RESET);
+    }
+    if(!err_num)
+        printf("%sNo errors, all good.\n%s", GREEN, RESET);
+    else
+        printf("%d errors. Fix.\n", err_num);
 }
