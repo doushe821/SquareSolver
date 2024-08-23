@@ -14,8 +14,7 @@
 #include "square_solver_io.h"
 #include "solve_quad.h"
 #include "doublecmp.h"
-#include "get_console_commands.h"
-#include "execute_console_command.h"
+#include "command_line_io.h"
 
 int main (int argc, char* argv[])
 {

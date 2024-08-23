@@ -39,9 +39,8 @@ void process_file_input ();
 //! @return Coefficients (a, b, c) with EOF and quit flag.
 //---------------------------------------------------------------------
 
-
-    const char* RED_COL = "\033[1;31m";
-    const char* RESET_COL = "\033[0m";
+const char* RED_COL = "\033[1;31m";
+const char* RESET_COL = "\033[0m";
 
 struct equation_input user_menu()
 {

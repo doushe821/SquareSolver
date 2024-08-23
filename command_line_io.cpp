@@ -1,24 +1,16 @@
 #include <stdio.h>
 #include <math.h>
-#include "get_console_commands.h"
+#include <string.h>
+#include <stdlib.h>
+#include "command_line_io.h"
 #include "solve_quad_command_line.h"
 #include "str_to_double.h"
-#include "execute_console_command.h"
 #include "solve_quad.h"
 #include "doublecmp.h"
 
-//---------------------------------------------------------------------
-//! Runs unit test. Data should be written inside execute_console_command.cpp as TestData structure array.
-//!
-//! @param [in] test TestData structure array.
-//!
-//! @param test_eps Accuracy for comparing answers with actual ones from tests[].
-//!
-//---------------------------------------------------------------------
-
-void RunTest(struct TestData test[], double test_eps);
-
-struct TestData data[NUMBER_OF_TESTS]{
+struct TestData data[NUMBER_OF_TESTS]
+//   a          b           c           x1ref     x2ref     nRoots
+{
     {0        , 0         , 0         , 0       , 0       , INF_ROOTS},  //a, b, c, x1ref, x2ref, nRoots.
     {1        , 0         , 0         , 0       , 0       , 1              },
     {0        , 22        , 133       , -6.04545, 0       , 1              },
@@ -44,6 +36,47 @@ struct TestData data[NUMBER_OF_TESTS]{
     {-INFINITY, INFINITY  , NAN       , 0       , 0       , DOUBLE_OVERFLOW},
     {-INFINITY, -INFINITY , NAN       , 0       , 0       , DOUBLE_OVERFLOW},
     {1.5      , 2.7       , -11.2     , 1.97692 , -3.77692,               2}};
+
+//---------------------------------------------------------------------
+//! Runs unit test. Data should be written inside command_line_io.cpp as TestData structure array.
+//!
+//! @param [in] test TestData structure array.
+//!
+//! @param test_eps Accuracy for comparing answers with actual ones from tests[].
+//!
+//---------------------------------------------------------------------
+
+void RunTest(struct TestData test[], double test_eps);
+
+//-------------------------------------------------------
+//! Processes command-line input.
+//!
+//! @param c value from argc from main.
+//!
+//! @param v values from argv from main.
+//-------------------------------------------------------
+
+int get_console_commands(int n, char* cl_name[], const struct command_line_option* option)
+{
+    for (int j = 0; j < NUMBER_OF_COMMANDS; j++)
+    {
+        if (strncmp(cl_name[n], option[j].name, MAX_COMMAND_SIZE) == 0)
+        {
+            return option[j].val;
+        }
+    }
+    return -1;
+}
+
+//---------------------------------------------------------------------
+//! Executes console commands.
+//!
+//! @param [in] c
+//!
+//! @param [in] j
+//!
+//! @param [in] v
+//---------------------------------------------------------------------
 
 void execute_console_command(int c, int* j, char* v[])
 {
