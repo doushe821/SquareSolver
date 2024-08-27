@@ -16,6 +16,7 @@ struct coef_input get_input_double(void)
     while (1)
     {
         int check = 0;
+
         if ((check = scanf("%lf", &input.temp_value)) == 1 && getchar() == '\n')
         {
             if (isfinite(input.temp_value) == false)
@@ -25,11 +26,13 @@ struct coef_input get_input_double(void)
             }
             return input;
         }
+
         else if (check == -1)
         {
             input.eof_flag = 1;
             return input;
         }
+
         else
         {
             int miss_input = 0;

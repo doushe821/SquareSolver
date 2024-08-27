@@ -1,12 +1,16 @@
 #ifndef C_ASSERT_H_INCLUDED
 #define C_ASSERT_H_INCLUDED
 
-#include "vibrant_print.h"
 #include <stdlib.h>
+#include <stdarg.h>
+#include "vibrant_print.h"
+#include "cool_assert.h"
 
-#define c_assert(x, comment)\
-if(!(x))\
-{vibrant_print(red, stderr, "Assertion failed ("comment"): "#x". %s -> %s -> %d", __FILE__, __func__, __LINE__);\
-abort();}
+#ifdef NDEBUG
+#define c_assert
+#else
+#define c_assert(condition, comment, ...) cool_assert(condition, #condition, __FILE__, \
+                                                      __func__, __LINE__, comment, ##__VA_ARGS__)
+#endif
 
 #endif

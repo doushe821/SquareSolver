@@ -1,7 +1,8 @@
 #ifndef GET_DOUBLE_INPUT_H_INCLUDED
 #define GET_DOUBLE_INPUT_H_INCLUDED
 
-struct coef_input{
+struct coef_input
+{
     double temp_value;
     bool eof_flag;
     bool overflow_flag;

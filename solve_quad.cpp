@@ -15,9 +15,9 @@
 #include "doublecmp.h"
 #include "solve_linear.h"
 
-struct solve_output solve_quad (double a_s, double b_s, double c_s)
+struct solve_output_quad solve_quad (double a_s, double b_s, double c_s)
 {
-    struct solve_output solve_quad_out = {};
+    struct solve_output_quad solve_quad_out = {};
     double d = b_s*b_s - 4*a_s*c_s;
 
     if (isfinite(d) == false)
@@ -26,19 +26,17 @@ struct solve_output solve_quad (double a_s, double b_s, double c_s)
         return solve_quad_out;
     }
 
-    if (doublecmp(a_s, 0, EPS) == 0 && doublecmp(b_s, 0, EPS) != 0)
+    if (doublecmp(a_s, 0, EPS) == 0)
     {
-        solve_quad_out = solve_linear(b_s, c_s);
-    }
-    else if (doublecmp(a_s, 0, EPS) == 0 && doublecmp(b_s, 0, EPS) == 0)
-    {
-        if (doublecmp(c_s, 0, EPS) != 0)
-            solve_quad_out.roots_num = 0;
-        else
-            solve_quad_out.roots_num = INF_ROOTS;
+        struct solve_output_linear linear_case_answers = {};
+        linear_case_answers = solve_linear(b_s, c_s);
+        solve_quad_out.roots_num = linear_case_answers.roots_num;
+        solve_quad_out.x1 = linear_case_answers.root;
+        solve_quad_out.is_linear = true;
     }
     else if (doublecmp(d, 0, EPS) == -1)
         solve_quad_out.roots_num = 0;
+
     else if (doublecmp(d, 0, EPS) == 0)
     {
         if (doublecmp(-b_s/(2*a_s), 0, EPS) == 0)
@@ -47,10 +45,11 @@ struct solve_output solve_quad (double a_s, double b_s, double c_s)
         }
         else
         {
-        solve_quad_out.x1 = -b_s/(2*a_s);
+            solve_quad_out.x1 = -b_s/(2*a_s);
         }
         solve_quad_out.roots_num = 1;
     }
+
     else
     {
         double d_sqrt = sqrt(d);
@@ -58,6 +57,7 @@ struct solve_output solve_quad (double a_s, double b_s, double c_s)
         solve_quad_out.x2 = (-b_s - d_sqrt)/(2*a_s);
         solve_quad_out.roots_num = 2;
     }
+
     return solve_quad_out;
 }
 

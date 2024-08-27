@@ -3,5 +3,4 @@
 
 #define C_ASSERT_H_INCLUDED
 
-
 #endif // C_NDEBUG_H_INCLUDED

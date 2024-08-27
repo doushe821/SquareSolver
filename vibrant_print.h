@@ -2,17 +2,8 @@
 #define VIBRANT_PRINT_H_INLUDED
 
 #include <stdio.h>
+#include "color_vprintf.h"
 
-enum spectrum{
-    red   ,
-    green ,
-    blue  ,
-    yellow,
-    orange,
-    reset
-    };
-
-
-int vibrant_print(enum spectrum color, FILE* output_stream, char* str, ...);
+int vibrant_print(enum spectrum color, FILE* output_stream, const char* str, ...);
 
 #endif

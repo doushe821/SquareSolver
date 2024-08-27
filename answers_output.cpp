@@ -1,3 +1,8 @@
+#include <stdio.h>
+#include "square_solver_io.h"
+#include "solve_quad.h"
+#include "C_ASSERT.h"
+
 //---------------------------------------------------------------------
 //! Displays answers to equation.
 //!
@@ -10,12 +15,7 @@
 //!
 //---------------------------------------------------------------------
 
-#include <stdio.h>
-#include "square_solver_io.h"
-#include "solve_quad.h"
-#include "C_ASSERT.h"
-
-void answers_output(const struct solve_output answers)
+void answers_output(const struct solve_output_quad answers)
 {
     switch (answers.roots_num)
     {
